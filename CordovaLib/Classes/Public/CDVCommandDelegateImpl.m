@@ -75,15 +75,15 @@
     CDV_EXEC_LOG(@"Exec: evalling: %@", [js substringToIndex:MIN([js length], 160)]);
     [_viewController.webViewEngine evaluateJavaScript:js completionHandler:^(id obj, NSError* error) {
         // TODO: obj can be something other than string
-        if ([obj isKindOfClass:[NSString class]]) {
-            NSString* commandsJSON = (NSString*)obj;
-            if ([commandsJSON length] > 0) {
-                CDV_EXEC_LOG(@"Exec: Retrieved new exec messages by chaining.");
-            }
+        // if ([obj isKindOfClass:[NSString class]]) {
+        //     NSString* commandsJSON = (NSString*)obj;
+        //     if ([commandsJSON length] > 0) {
+        //         CDV_EXEC_LOG(@"Exec: Retrieved new exec messages by chaining.");
+        //     }
 
-            [self->_commandQueue enqueueCommandBatch:commandsJSON];
-            [self->_commandQueue executePending];
-        }
+        //     [self->_commandQueue enqueueCommandBatch:commandsJSON];
+        //     [self->_commandQueue executePending];
+        // }
     }];
 }
 
