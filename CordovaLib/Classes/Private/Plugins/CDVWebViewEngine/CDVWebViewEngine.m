@@ -521,7 +521,10 @@ static void * KVOContext = &KVOContext;
 
     NSString* message = [NSString stringWithFormat:@"Failed to load webpage with error: %@", [error localizedDescription]];
     NSLog(@"%@", message);
-
+    if ([vc respondsToSelector:@selector(errorWithCode:)]) {
+        [vc errorWithCode:error];
+        return;
+    }
     NSURL* errorUrl = vc.errorURL;
     if (errorUrl) {
         NSCharacterSet *charSet = [NSCharacterSet URLFragmentAllowedCharacterSet];
