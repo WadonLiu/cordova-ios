@@ -145,6 +145,10 @@
         
     }
 
+    [configuration.preferences setValue:@YES forKey:@"allowFileAccessFromFileURLs"];
+
+    [configuration setValue:@YES forKey:@"_allowUniversalAccessFromFileURLs"];
+
     return configuration;
 }
 
@@ -532,6 +536,21 @@ static void * KVOContext = &KVOContext;
         NSLog(@"%@", [errorUrl absoluteString]);
         [theWebView loadRequest:[NSURLRequest requestWithURL:errorUrl]];
     }
+}
+
+- (void)webView:(WKWebView *)webView didReceiveAuthenticationChallenge:(NSURLAuthenticationChallenge *)challenge completionHandler:(void (^)(NSURLSessionAuthChallengeDisposition, NSURLCredential * _Nullable))completionHandler{
+    dispatch_async(dispatch_get_main_queue(), ^{
+        if ([challenge.protectionSpace.authenticationMethod isEqualToString:NSURLAuthenticationMethodServerTrust]) {
+            if(challenge.previousFailureCount==0) {
+                NSURLCredential*credential = [NSURLCredential credentialForTrust:challenge.protectionSpace.serverTrust];
+                completionHandler(NSURLSessionAuthChallengeUseCredential, credential);
+            }else{
+                completionHandler(NSURLSessionAuthChallengeUseCredential,nil);
+            }
+        }else{
+            completionHandler(NSURLSessionAuthChallengeUseCredential, nil);
+        }
+    });
 }
 
 - (void)webViewWebContentProcessDidTerminate:(WKWebView *)webView
